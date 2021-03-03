@@ -87,11 +87,8 @@ module.exports = {
         try {
             let product
 
-            if (IdProduct) {
-                product = await productModel.findOne({ _id: IdProduct });
-            }
-            if (title) {
-                product = await productModel.findOne({ title });
+            if (IdProduct || title) {
+                product = await productModel.findOne({ $or: [{ _id: IdProduct }, { title }] });
             }
 
             if (!product) {
@@ -104,5 +101,4 @@ module.exports = {
             return res.status(400).json({ message: error.message })
         }
     },
-
 } 
