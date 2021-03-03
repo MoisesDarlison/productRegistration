@@ -5,9 +5,9 @@ const CategorySchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    product:[{
+    products:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'Products',
     }],
     createdAt: {
         type: Date,

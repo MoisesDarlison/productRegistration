@@ -17,11 +17,19 @@ module.exports = {
             let categoryObject = await categoryModel.findOne({ name: category })
 
             if (!categoryObject) {
-
                 categoryObject = await categoryModel.create({ name: category });
             }
 
-            const productRegistred = await productModel.create({ title, description, price, assingTo: categoryObject.id });
+            const productRegistred = await productModel.create({
+                title,
+                description,
+                price,
+                assingTo: categoryObject.id
+            });
+
+            categoryObject.products.push(productRegistred._id);
+
+            categoryObject.save();
 
             return res.status(201).json({ productRegistred })
         } catch (error) {

@@ -1,4 +1,4 @@
-const productModel = require('../models/product');
+
 const categoryModel = require('../models/category');
 
 module.exports = {
@@ -17,5 +17,17 @@ module.exports = {
 
             return res.status(400).json({ message: error.message })
         }
+    },
+    async index(req, res) {
+
+        try {
+            const categoryList = await categoryModel.find().populate('products'); 
+
+            return res.status(200).json({ categoryList })
+        } catch (error) {
+
+            res.status(400).json({ message: error.message })
+        }
+
     },
 }

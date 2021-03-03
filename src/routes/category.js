@@ -1,8 +1,9 @@
 const express = require('express');
 const route = express();
 
-const { update } = require('../controllers/categoryController')
+const { index, update } = require('../controllers/categoryController')
 
+route.get('/', index)
 route.put('/:idCategory', update);
 
 
