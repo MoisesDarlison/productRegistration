@@ -56,42 +56,49 @@ module.exports = {
 
         try {
 
-            const product = await productModel.findById(idProduct);
-            if (!product) {
+            const productIdParams = await productModel.findById(idProduct);
+            if (!productIdParams) {
                 return res.status(404).json({ message: "Product does not exists" })
             }
 
+            /***
+             * verifica se ja exit algum produto com o mesmo nome Caso 
+             * TRUE e NAO seja este mesmo ID passado nos params
+             *  sera retornado o produto existente com mesmo nome
+             */
             const titleAlreadExist = await productModel.findOne({ title })
-            
-            if (titleAlreadExist) {
+            if (titleAlreadExist && (titleAlreadExist._id.toString() !== productIdParams._id.toString())) {
                 return res.status(404).json({ message: "Product title alread exists", titleAlreadExist })
             }
 
-
-
+            /**
+             * Verifica se a categoria existe caso
+             * FALSE é criada uma categoria e adicionado a variavel CategoryObject 
+             */
             let categoryObject = await categoryModel.findOne({ name: category })
             if (!categoryObject) {
                 categoryObject = await categoryModel.create({ name: category });
             }
 
-            const productEdited = await productModel.findOneAndUpdate({ _id: idProduct },
+            //Edita o produto e retorna ele ja atualizado com o new:true
+            const product = await productModel.findOneAndUpdate({ _id: idProduct },
                 {
                     $set: {
                         title, description, price, assingTo: categoryObject._id
                     }
                 }, { new: true });
 
-            const productRemoveOldCategory = await categoryModel.findOne({ _id: product.assingTo })
+            //remove o product da categoria 
+            const productRemoveOldCategory = await categoryModel.findOne({ _id: productIdParams.assingTo })
+            productRemoveOldCategory.products.pull(idProduct)
 
-            productRemoveOldCategory.products.pull({ _id: product._id })
+            //add o produto na categoria
             categoryObject.products.push(idProduct);
 
             await productRemoveOldCategory.save();
             await categoryObject.save();
 
-
-
-            return res.status(201).json({ productEdited })
+            return res.status(201).json({ product })
         } catch (error) {
 
             console.log(error);
@@ -138,4 +145,4 @@ module.exports = {
             return res.status(400).json({ message: error.message })
         }
     },
-} 
+}
