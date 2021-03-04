@@ -11,7 +11,7 @@ module.exports = {
             const productAlreadExists = await productModel.findOne({ title });
 
             if (productAlreadExists) {
-                return res.status(400).json({ message: "Product alread Exists" })
+                return res.status(401).json({ message: "Product alread Exists" })
             }
 
             let categoryObject = await categoryModel.findOne({ name: category })
@@ -29,9 +29,9 @@ module.exports = {
 
             categoryObject.products.push(productRegistred._id);
 
-            categoryObject.save();
+            await categoryObject.save();
 
-            return res.status(201).json({ productRegistred })
+            return res.status(201).json({ productRegistred });
         } catch (error) {
 
             return res.status(400).json({ message: error.message })
@@ -51,36 +51,47 @@ module.exports = {
     },
     async update(req, res) {
 
-        const { IdProduct } = req.params;
+        const { idProduct } = req.params;
         const { title, description, price, category } = req.body;
 
         try {
 
-            const productAlreadExists = await productModel.findById(IdProduct);
-
-            if (!productAlreadExists) {
-                return res.status(400).json({ message: "Product does not exists" })
+            const product = await productModel.findById(idProduct);
+            if (!product) {
+                return res.status(404).json({ message: "Product does not exists" })
             }
+
+            const titleAlreadExist = await productModel.findOne({ title })
+            
+            if (titleAlreadExist) {
+                return res.status(404).json({ message: "Product title alread exists", titleAlreadExist })
+            }
+
+
 
             let categoryObject = await categoryModel.findOne({ name: category })
-
             if (!categoryObject) {
-
                 categoryObject = await categoryModel.create({ name: category });
-
             }
 
-            const product = await productModel.updateOne({ _id: IdProduct },
+            const productEdited = await productModel.findOneAndUpdate({ _id: idProduct },
                 {
                     $set: {
-                        title,
-                        description,
-                        price,
-                        assingTo: categoryObject.id
+                        title, description, price, assingTo: categoryObject._id
                     }
-                })
+                }, { new: true });
 
-            return res.status(201).json({ mesage: "Edit Sucess" })
+            const productRemoveOldCategory = await categoryModel.findOne({ _id: product.assingTo })
+
+            productRemoveOldCategory.products.pull({ _id: product._id })
+            categoryObject.products.push(idProduct);
+
+            await productRemoveOldCategory.save();
+            await categoryObject.save();
+
+
+
+            return res.status(201).json({ productEdited })
         } catch (error) {
 
             console.log(error);
@@ -104,6 +115,24 @@ module.exports = {
             }
 
             return res.status(200).json({ product })
+        } catch (error) {
+
+            return res.status(400).json({ message: error.message })
+        }
+    },
+    async destroy(req, res) {
+        const { idProduct } = req.params;
+
+        try {
+            const product = await productModel.findOne({ _id: idProduct });
+
+            if (!product) {
+                return res.status(401).json({ message: "Product does not exist" })
+            }
+
+            await productModel.deleteMany({ _id: idProduct }).populate('assyngTo');
+
+            return res.status(200).json({ message: `Product Delete with sucess` })
         } catch (error) {
 
             return res.status(400).json({ message: error.message })

@@ -11,7 +11,8 @@ const ProductSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        require: true
+        require: true,
+        minValue: 0
     },
     assingTo:{
         type: mongoose.Schema.Types.ObjectId,

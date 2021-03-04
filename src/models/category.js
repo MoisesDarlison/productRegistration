@@ -3,6 +3,7 @@ const mongoose = require('../config/database/DbConfig')
 const CategorySchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         require: true
     },
     products:[{
