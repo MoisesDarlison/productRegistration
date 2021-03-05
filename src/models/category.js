@@ -1,3 +1,4 @@
+
 const mongoose = require('../config/database/DbConfig')
 
 const CategorySchema = new mongoose.Schema({
@@ -14,7 +15,6 @@ const CategorySchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-
 });
 
 const Category = mongoose.model('Categories', CategorySchema)

@@ -4,7 +4,6 @@ const categoryModel = require('../models/category');
 module.exports = {
 
     async create(req, res) {
-
         const { title, description, price, category } = req.body;
 
         try {
@@ -40,23 +39,21 @@ module.exports = {
     async index(req, res) {
 
         try {
-            const productList = await productModel.find(); //.populate('assingTo')
+            const productList = await productModel.find();
 
             return res.status(200).json({ productList })
         } catch (error) {
 
             res.status(400).json({ message: error.message })
         }
-
     },
     async update(req, res) {
-
         const { idProduct } = req.params;
         const { title, description, price, category } = req.body;
 
         try {
-
             const productIdParams = await productModel.findById(idProduct);
+
             if (!productIdParams) {
                 return res.status(404).json({ message: "Product does not exists" })
             }
@@ -86,7 +83,8 @@ module.exports = {
                     $set: {
                         title, description, price, assingTo: categoryObject._id
                     }
-                }, { new: true });
+                },
+                { new: true });
 
             //remove o product da categoria 
             const productRemoveOldCategory = await categoryModel.findOne({ _id: productIdParams.assingTo })
@@ -106,7 +104,6 @@ module.exports = {
         }
     },
     async filter(req, res) {
-
         const { IdProduct } = req.params;
         const { title } = req.body;
 

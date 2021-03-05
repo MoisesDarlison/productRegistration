@@ -3,6 +3,7 @@ const mongoose = require('../config/database/DbConfig')
 const ProductSchema = new mongoose.Schema({
     title: {
         type: String,
+        unique: true,
         require: true
     },
     description: {
@@ -23,7 +24,6 @@ const ProductSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-
 });
 
 const Product = mongoose.model('Products', ProductSchema);

@@ -1,11 +1,10 @@
-const express = require('express');
-const route = express();
+
+const Route = require('express').Router();
 
 const { index, update ,destroy} = require('../controllers/categoryController')
 
-route.get('/', index)
-route.put('/:idCategory', update);
-route.delete('/:idCategory', destroy);
+Route.get('/', index)
+Route.put('/:idCategory', update);
+Route.delete('/:idCategory', destroy);
 
-
-module.exports = route
+module.exports = Route

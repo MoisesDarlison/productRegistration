@@ -21,6 +21,7 @@ module.exports = {
             }
 
             category.name = name;
+
             await category.save();
 
             return res.status(201).json({ message: `Category ${category.name} edited with sucess` })
@@ -37,7 +38,7 @@ module.exports = {
             return res.status(200).json({ categoryList })
         } catch (error) {
 
-            res.status(400).json({ message: error.message })
+            return res.status(400).json({ message: error.message })
         }
 
     },
