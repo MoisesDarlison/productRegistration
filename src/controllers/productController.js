@@ -39,7 +39,7 @@ module.exports = {
     async index(req, res) {
 
         try {
-            const productList = await productModel.find();
+            const productList = await productModel.find().populate('assingTo', 'name');;
 
             return res.status(200).json({ productList })
         } catch (error) {
@@ -104,24 +104,30 @@ module.exports = {
         }
     },
     async filter(req, res) {
-        const { IdProduct } = req.params;
-        const { title } = req.body;
+        const { title } = req.query;
+        /**
+         * var pattern = "abc #category code\n123 #item number"
+         * db.products.find( { sku: { $regex: pattern, $options: "x" } } )
+         * option "x" ignora os espacos
+         * option "i" ignora difença entre maiusculo e minusculo
+          */
 
         try {
-            let product
+            const product = await productModel.find({ title: { $regex: title, $options: "i" } }).
+                limit(5).select(["_id",
+                    "title",
+                    "description",
+                    "price",
+                ]).populate('assingTo', 'name');
 
-            if (IdProduct || title) {
-                product = await productModel.findOne({ $or: [{ _id: IdProduct }, { title }] });
-            }
-
-            if (!product) {
-                return res.status(400).json({ message: "Product does not exists" })
+            if (product.length < 1) {
+                return res.status(404).json({ message: "Product does not exists" })
             }
 
             return res.status(200).json({ product })
         } catch (error) {
 
-            return res.status(400).json({ message: error.message })
+            return res.status(500).json({ message: error.message })
         }
     },
     async destroy(req, res) {

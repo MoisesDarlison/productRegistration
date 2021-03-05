@@ -1,9 +1,11 @@
 
 const Route = require('express').Router();
 
-const { index, update ,destroy} = require('../controllers/categoryController')
+const {create, index, update ,destroy, filter} = require('../controllers/categoryController')
 
-Route.get('/', index)
+Route.post('/', create);
+Route.get('/list', index);
+Route.get('/', filter);
 Route.put('/:idCategory', update);
 Route.delete('/:idCategory', destroy);
 
