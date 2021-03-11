@@ -1,5 +1,14 @@
 const productModel = require('../models/product');
 const categoryModel = require('../models/category');
+const yup = require('yup');
+
+
+const schema = yup.object().shape({
+    title: yup.string().required().min(2),
+    description: yup.string(),
+    price: yup.number().positive(),
+    category: yup.string().required().min(2)
+});
 
 module.exports = {
 
@@ -7,6 +16,8 @@ module.exports = {
         const { title, description, price, category } = req.body;
 
         try {
+            await schema.validate({ title, description, price, category });
+
             const productAlreadExists = await productModel.findOne({ title });
 
             if (productAlreadExists) {
@@ -32,8 +43,10 @@ module.exports = {
 
             return res.status(201).json({ productRegistred });
         } catch (error) {
-
-            return res.status(400).json({ message: error.message })
+            if (error instanceof yup.ValidationError) {
+                res.status(400).json({ message: error.message });
+            }
+            return res.status(500).json({ message: error.message });
         }
     },
     async index(req, res) {
