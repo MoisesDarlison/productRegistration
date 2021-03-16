@@ -68,7 +68,7 @@ module.exports = {
         try {
             const isvalid = await mongoose.isValidObjectId(idProduct);
             if (!isvalid) {
-                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };                
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
             }
 
             const productIdParams = await productModel.findById(idProduct);
@@ -84,7 +84,7 @@ module.exports = {
              */
             const titleAlreadExist = await productModel.findOne({ title })
             if (titleAlreadExist && (titleAlreadExist._id.toString() !== productIdParams._id.toString())) {
-                return res.status(401).json({ message: "Product title alread exists", titleAlreadExist })
+                throw { type: 'AccessDenied', status: 401, message: { message: "Product title alread exists", titleAlreadExist } };
             }
 
             /**
@@ -116,8 +116,9 @@ module.exports = {
             await categoryObject.save();
 
             return res.status(201).json({ product })
+
         } catch (error) {
-            return res.status(error.status || 500).json({ message: error.message})
+            return res.status(error.status || 500).json({ message: error.message })
         }
     },
     async filter(req, res) {
@@ -128,8 +129,11 @@ module.exports = {
          * option "x" ignora os espacos
          * option "i" ignora difença entre maiusculo e minusculo
           */
-
         try {
+            if (!title) {
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
+            }
+
             const product = await productModel.find({ title: { $regex: title, $options: "i" } }).
                 limit(5).select(["_id",
                     "title",
@@ -138,31 +142,36 @@ module.exports = {
                 ]).populate('assingTo', 'name');
 
             if (product.length < 1) {
-                return res.status(404).json({ message: "Product does not exists" })
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
             }
 
             return res.status(200).json({ product })
         } catch (error) {
 
-            return res.status(500).json({ message: error.message })
+            return res.status(error.status || 500).json({ message: error.message })
         }
     },
     async destroy(req, res) {
         const { idProduct } = req.params;
 
         try {
+            const isvalid = await mongoose.isValidObjectId(idProduct);
+            if (!isvalid) {
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
+            }
+
             const product = await productModel.findOne({ _id: idProduct });
 
             if (!product) {
-                return res.status(401).json({ message: "Product does not exist" })
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
             }
 
             await productModel.deleteMany({ _id: idProduct }).populate('assyngTo');
 
-            return res.status(200).json({ message: `Product Delete with sucess` })
+            return res.status(203).json({ message: `Product Delete with sucess` })
         } catch (error) {
 
-            return res.status(400).json({ message: error.message })
+            return res.status(error.status || 500).json({ message: error.message })
         }
     },
 }
