@@ -1,12 +1,13 @@
 const productModel = require('../models/product');
 const categoryModel = require('../models/category');
 const yup = require('yup');
+const mongoose = require('mongoose');
 
 
 const schema = yup.object().shape({
     title: yup.string().required().min(2),
     description: yup.string(),
-    price: yup.number().positive(),
+    price: yup.number().positive().required(),
     category: yup.string().required().min(2)
 });
 
@@ -21,7 +22,7 @@ module.exports = {
             const productAlreadExists = await productModel.findOne({ title });
 
             if (productAlreadExists) {
-                return res.status(401).json({ message: "Product alread Exists" })
+                throw { type: 'AccessDenied', status: 401, message: 'Product alread Exists' };
             }
 
             let categoryObject = await categoryModel.findOne({ name: category })
@@ -41,12 +42,12 @@ module.exports = {
 
             await categoryObject.save();
 
-            return res.status(201).json({ productRegistred });
+            return res.status(201).json(productRegistred);
         } catch (error) {
             if (error instanceof yup.ValidationError) {
-                res.status(400).json({ message: error.message });
+                return res.status(401).json({ message: error.message });
             }
-            return res.status(500).json({ message: error.message });
+            return res.status(error.status || 500).json({ message: error.message });
         }
     },
     async index(req, res) {
@@ -54,7 +55,7 @@ module.exports = {
         try {
             const productList = await productModel.find().populate('assingTo', 'name');;
 
-            return res.status(200).json({ productList })
+            return res.status(200).json(productList)
         } catch (error) {
 
             res.status(400).json({ message: error.message })
@@ -65,10 +66,15 @@ module.exports = {
         const { title, description, price, category } = req.body;
 
         try {
+            const isvalid = await mongoose.isValidObjectId(idProduct);
+            if (!isvalid) {
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };                
+            }
+
             const productIdParams = await productModel.findById(idProduct);
 
             if (!productIdParams) {
-                return res.status(404).json({ message: "Product does not exists" })
+                throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
             }
 
             /***
@@ -78,7 +84,7 @@ module.exports = {
              */
             const titleAlreadExist = await productModel.findOne({ title })
             if (titleAlreadExist && (titleAlreadExist._id.toString() !== productIdParams._id.toString())) {
-                return res.status(404).json({ message: "Product title alread exists", titleAlreadExist })
+                return res.status(401).json({ message: "Product title alread exists", titleAlreadExist })
             }
 
             /**
@@ -111,9 +117,7 @@ module.exports = {
 
             return res.status(201).json({ product })
         } catch (error) {
-
-            console.log(error);
-            return res.status(400).json({ message: error.message })
+            return res.status(error.status || 500).json({ message: error.message})
         }
     },
     async filter(req, res) {
