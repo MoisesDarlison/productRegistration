@@ -18,10 +18,8 @@
 - [x] Yup
 
 ### Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
-- [Git](https://git-scm.com)
 - [Node.js](https://nodejs.org/en/)
 - [MongoDB](https://www.mongodb.com) --> No meu caso utilizei o [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
 
 ### Agora com as ferramentas instaladas, vamos executar o back-end:
 
