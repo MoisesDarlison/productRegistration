@@ -49,46 +49,50 @@ npm run test
 ## Rotas
 
 ### URL Base
- 
+
  `address:port`
- 
+
 Tabela de Rotas
-  
+
    * Rota de Categorias
-      
+
       * Nova categoria - `post/categories/` 
         * Enviar no body (name)
-      
+
       * Listar todas as categorias - `get/categories/list`
-      
+
       * Listar os dados de uma única categoria - `get/categories`
-           
+
       * Editar os dados da categoria - `put/categories/__id da categoria__`
         * Enviar na URL o ID da categoria
         * Enviar no body (name)
-      
+
       * Excluir uma categoria - `delete/categories/__id da categoria__`
-        
+
    * Rota de Produtos
       * Novo produto - `post/products`
         * Enviar no body ( title, description, price, category )
-      
+
       * Listar todos os produtos - `get/products/list`
-               
+
       * Listar os dados de único endereço - `get/products/?title=___title a ser pesquisado___` 
-              
+
       * Editar os dados de um endereço - `put/products/___id do produto___`
         * Enviar no body ( title, description, price, category )
-        
+
       * Excluir um endereço - `delete/products/___id do produto___`
-        
+
 
 ### Autor
 ---
 
-<b>Moises Darlison</b></sub></a> 
+<a href="https://github.com/moisesdarlison/">
+ <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/73721075?s=460&u=d58132c9cde0aef04930daae15da4eb3144bb11b&v=4" width="100px;" alt=""/>
+ <br />
+ <sub><b>Moises Darlison</b></sub></a> 
 
 
 Feito por Moises Darlison 👋🏽 Entre em contato!</br>
  [![Linkedin Badge](https://img.shields.io/badge/-MoisesDarlison-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/moises-darlison-12833259//)](https://www.linkedin.com/in/moises-darlison-12833259/)
 [![Gmail Badge](https://img.shields.io/badge/-moisesdarlison91@gmail.com-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:moisesdarlison91@gmail.com)](mailto:moisesdarlison91@gmail.com)
+
