@@ -15,7 +15,6 @@ module.exports = {
 
     async create(req, res) {
         const { title, description, price, category } = req.body;
-
         try {
             await schema.validate({ title, description, price, category });
 
@@ -50,6 +49,7 @@ module.exports = {
             return res.status(error.status || 500).json({ message: error.message });
         }
     },
+
     async index(req, res) {
 
         try {
@@ -58,9 +58,10 @@ module.exports = {
             return res.status(200).json(productList)
         } catch (error) {
 
-            res.status(400).json({ message: error.message })
+            res.status(500).json({ message: error.message })
         }
     },
+
     async update(req, res) {
         const { idProduct } = req.params;
         const { title, description, price, category } = req.body;
@@ -121,6 +122,7 @@ module.exports = {
             return res.status(error.status || 500).json({ message: error.message })
         }
     },
+
     async filter(req, res) {
         const { title } = req.query;
         /**
@@ -145,12 +147,13 @@ module.exports = {
                 throw { type: 'AccessDenied', status: 404, message: 'Product does not exists' };
             }
 
-            return res.status(200).json({ product })
+            return res.status(200).json(product)
         } catch (error) {
 
             return res.status(error.status || 500).json({ message: error.message })
         }
     },
+
     async destroy(req, res) {
         const { idProduct } = req.params;
 
