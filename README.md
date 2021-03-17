@@ -87,7 +87,7 @@ Tabela de Rotas
 ---
 
 <a href="https://github.com/moisesdarlison/">
- <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/73721075?s=460&u=d58132c9cde0aef04930daae15da4eb3144bb11b&v=4" width="100px;" alt=""/>
+ <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/73721075?s=460&u=7e4e28d8f516b0b7e26b8f178b3ce56124c1b1ec&v=4" width="100px;" alt=""/>
  <br />
  <sub><b>Moises Darlison</b></sub></a> 
 
