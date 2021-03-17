@@ -86,10 +86,7 @@ Tabela de Rotas
 ### Autor
 ---
 
-<a href="https://github.com/moisesdarlison/">
- <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/73721075?s=460&u=d58132c9cde0aef04930daae15da4eb3144bb11b&v=4" width="100px;" alt=""/>
- <br />
- <sub><b>Moises Darlison</b></sub></a> 
+<b>Moises Darlison</b></sub></a> 
 
 
 Feito por Moises Darlison 👋🏽 Entre em contato!</br>
